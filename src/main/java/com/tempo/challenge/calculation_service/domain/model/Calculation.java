@@ -33,7 +33,28 @@ public class Calculation {
     public BigDecimal getNum1() {return num1;}
     public BigDecimal getNum2() {return num2;}
     public BigDecimal getPercentage() {return percentage;}
-    public BigDecimal getResult() {return result;}
 
+    /**
+     * Calculates the sum of num1 and num2 and then applies the dynamic percentage.
+     * The result is stored in the 'result' attribute.
+     */
+    public void calculateResult() {
+        // Sum the two numbers
+        BigDecimal sum = num1.add(num2);
 
+        // Calculate the percentage to be applied to the sum
+        BigDecimal percentageAmount = sum.multiply(percentage).divide(BigDecimal.valueOf(100));
+
+        // Calculate final result
+        result = sum.add(percentageAmount);
+    }
+
+    /**
+     * Gets the result of the calculation.
+     *
+     * @return The result of (num1 + num2) + (percentage of the sum).
+     */
+    public BigDecimal getResult() {
+        return result;
+    }
 }
