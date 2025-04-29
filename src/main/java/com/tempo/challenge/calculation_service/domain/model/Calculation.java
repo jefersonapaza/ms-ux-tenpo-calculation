@@ -1,5 +1,7 @@
 package com.tempo.challenge.calculation_service.domain.model;
 
+import com.tempo.challenge.calculation_service.domain.exception.InvalidPercentageException;
+
 import java.math.BigDecimal;
 
 /**
@@ -39,6 +41,11 @@ public class Calculation {
      * The result is stored in the 'result' attribute.
      */
     public void calculateResult() {
+
+        if (percentage.compareTo(BigDecimal.ZERO) < 0 || percentage.compareTo(BigDecimal.valueOf(100)) > 0) {
+            throw new InvalidPercentageException("Percentage must be between 0 and 100");
+        }
+
         // Sum the two numbers
         BigDecimal sum = num1.add(num2);
 
