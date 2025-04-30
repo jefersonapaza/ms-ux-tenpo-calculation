@@ -27,7 +27,23 @@ public class TraceabilityRecord {
     this.timestamp = timestamp;
   }
 
+  public BigDecimal getNum1() {
+    return num1;
+  }
 
+  public BigDecimal getNum2() {
+    return num2;
+  }
 
+  public BigDecimal getPercentageApplied() {
+    return percentageApplied;
+  }
 
+  public BigDecimal getResult() {
+    return result;
+  }
+
+  public LocalDateTime getTimestamp() {
+    return timestamp;
+  }
 }
