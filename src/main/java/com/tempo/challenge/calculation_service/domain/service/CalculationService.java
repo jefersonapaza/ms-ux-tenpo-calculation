@@ -1,5 +1,6 @@
 package com.tempo.challenge.calculation_service.domain.service;
 
+import com.tempo.challenge.calculation_service.domain.exception.TraceabilityException;
 import com.tempo.challenge.calculation_service.domain.model.Calculation;
 import com.tempo.challenge.calculation_service.domain.port.PercentagePort;
 
@@ -23,9 +24,20 @@ public class CalculationService {
     }
 
     public Calculation calculate(BigDecimal num1, BigDecimal num2) {
-        BigDecimal percentage = percentagePort.getCurrentPercentage();
+        BigDecimal percentage;
+
+        try {
+            percentage = percentagePort.getCurrentPercentage();
+        } catch (Exception e) {
+            throw new TraceabilityException("Error retrieving percentage from external service.", e);
+        }
+
+        if (percentage == null) {
+            throw new TraceabilityException("No cached percentage available and external service failed.");
+        }
+
         Calculation calculation = new Calculation(num1, num2, percentage);
-        calculation.calculateResult(); // la lógica vive en la entidad
+        calculation.calculateResult();
         return calculation;
     }
 }
