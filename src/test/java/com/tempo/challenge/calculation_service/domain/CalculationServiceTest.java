@@ -1,9 +1,8 @@
 package com.tempo.challenge.calculation_service.domain;
 
-import com.tempo.challenge.calculation_service.domain.exception.InvalidPercentageException;
 import com.tempo.challenge.calculation_service.domain.exception.TraceabilityException;
 import com.tempo.challenge.calculation_service.domain.model.Calculation;
-import com.tempo.challenge.calculation_service.domain.port.PercentagePort;
+import com.tempo.challenge.calculation_service.domain.port.PercentageRepository;
 import com.tempo.challenge.calculation_service.domain.service.CalculationService;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +18,7 @@ public class CalculationServiceTest {
     void given_percentageProvided_when_calculate_then_returnCalculationWithResult() {
 
         // Given
-        PercentagePort mockPort = mock(PercentagePort.class);
+        PercentageRepository mockPort = mock(PercentageRepository.class);
         when(mockPort.getCurrentPercentage()).thenReturn(new BigDecimal("10"));
 
         CalculationService service = new CalculationService(mockPort);
@@ -35,7 +34,7 @@ public class CalculationServiceTest {
     @Test
     void given_exceptionFromPort_when_calculate_then_throwTraceabilityException() {
         // Given
-        PercentagePort mockPort = mock(PercentagePort.class);
+        PercentageRepository mockPort = mock(PercentageRepository.class);
         when(mockPort.getCurrentPercentage()).thenThrow(new RuntimeException("external error"));
 
         CalculationService service = new CalculationService(mockPort);
