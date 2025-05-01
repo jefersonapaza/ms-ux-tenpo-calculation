@@ -2,7 +2,7 @@ package com.tempo.challenge.calculation_service.domain.service;
 
 import com.tempo.challenge.calculation_service.domain.exception.TraceabilityException;
 import com.tempo.challenge.calculation_service.domain.model.Calculation;
-import com.tempo.challenge.calculation_service.domain.port.PercentagePort;
+import com.tempo.challenge.calculation_service.domain.port.PercentageRepository;
 
 import java.math.BigDecimal;
 
@@ -17,17 +17,17 @@ import java.math.BigDecimal;
  */
 
 public class CalculationService {
-    private final PercentagePort percentagePort;
+    private final PercentageRepository percentageRepository;
 
-    public CalculationService(PercentagePort percentagePort) {
-        this.percentagePort = percentagePort;
+    public CalculationService(PercentageRepository percentageRepository) {
+        this.percentageRepository = percentageRepository;
     }
 
     public Calculation calculate(BigDecimal num1, BigDecimal num2) {
         BigDecimal percentage;
 
         try {
-            percentage = percentagePort.getCurrentPercentage();
+            percentage = percentageRepository.getCurrentPercentage();
         } catch (Exception e) {
             throw new TraceabilityException("Error retrieving percentage from external service.", e);
         }

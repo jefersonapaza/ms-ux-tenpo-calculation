@@ -9,7 +9,7 @@ import java.math.BigDecimal;
  * <p>
  * Domain port for retrieving the dynamic percentage used in calculation operations.
  */
-public interface PercentagePort {
+public interface PercentageRepository {
 
   /**
     * Retrieves the current dynamic percentage to apply in calculations.
