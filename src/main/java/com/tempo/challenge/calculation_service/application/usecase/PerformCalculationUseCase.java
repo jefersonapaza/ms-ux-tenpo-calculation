@@ -6,6 +6,7 @@ import com.tempo.challenge.calculation_service.domain.model.Calculation;
 import com.tempo.challenge.calculation_service.domain.model.TraceabilityRecord;
 import com.tempo.challenge.calculation_service.domain.service.CalculationService;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,18 +29,19 @@ public class PerformCalculationUseCase {
         this.calculationService = calculationService;
     }
 
-    public TraceabilityRecordResponseDto execute(BigDecimal num1, BigDecimal num2) {
-        Calculation calculation = calculationService.calculate(num1, num2);
+    public Mono<TraceabilityRecordResponseDto> execute(BigDecimal num1, BigDecimal num2) {
+        return calculationService.calculate(num1, num2)
+                .map(calculation -> {
+                    TraceabilityRecord record = new TraceabilityRecord(
+                            calculation.getNum1(),
+                            calculation.getNum2(),
+                            calculation.getPercentage(),
+                            calculation.getResult(),
+                            LocalDateTime.now()
+                    );
 
-        TraceabilityRecord record = new TraceabilityRecord(
-                calculation.getNum1(),
-                calculation.getNum2(),
-                calculation.getPercentage(),
-                calculation.getResult(),
-                LocalDateTime.now()
-        );
-
-        return TraceabilityRecordMapper.toDto(record);
+                    return TraceabilityRecordMapper.toDto(record);
+                });
     }
 
 }

@@ -1,5 +1,7 @@
 package com.tempo.challenge.calculation_service.domain.port;
 
+import reactor.core.publisher.Mono;
+
 import java.math.BigDecimal;
 
 /**
@@ -16,5 +18,5 @@ public interface PercentageRepository {
     *
     * @return the percentage as a BigDecimal.
   */
-  BigDecimal getCurrentPercentage();
+  Mono<BigDecimal> getCurrentPercentage();
 }
