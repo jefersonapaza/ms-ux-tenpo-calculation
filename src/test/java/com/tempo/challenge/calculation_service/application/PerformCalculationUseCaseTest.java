@@ -13,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -45,20 +47,22 @@ public class PerformCalculationUseCaseTest {
     @Test
     void given_validInputs_when_execute_then_returnTraceabilityRecordResponseDto() {
         // Arrange
-        when(calculationService.calculate(num1, num2)).thenReturn(calculation);
+        when(calculationService.calculate(num1, num2)).thenReturn(Mono.just(calculation));
 
-        // Act
-        TraceabilityRecordResponseDto response = useCase.execute(num1, num2);
-
-        // Assert
-        assertEquals(num1, response.getNum1());
-        assertEquals(num2, response.getNum2());
-        assertEquals(percentage, response.getPercentageApplied());
-        assertEquals(calculation.getResult(), response.getResult());
-        assertNotNull(response.getTimestamp());
+        // Act & Assert
+        StepVerifier.create(useCase.execute(num1, num2))
+                .assertNext(response -> {
+                    assertEquals(num1, response.getNum1());
+                    assertEquals(num2, response.getNum2());
+                    assertEquals(percentage, response.getPercentageApplied());
+                    assertEquals(calculation.getResult(), response.getResult());
+                    assertNotNull(response.getTimestamp());
+                })
+                .verifyComplete();
 
         verify(calculationService, times(1)).calculate(num1, num2);
     }
+
 
     @Test
     void given_serviceThrowsException_when_execute_then_propagateException() {
