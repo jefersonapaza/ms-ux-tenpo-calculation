@@ -3,6 +3,7 @@ package com.tempo.challenge.calculation_service.domain.service;
 import com.tempo.challenge.calculation_service.domain.exception.TraceabilityException;
 import com.tempo.challenge.calculation_service.domain.model.Calculation;
 import com.tempo.challenge.calculation_service.domain.port.PercentageRepository;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 
@@ -23,21 +24,15 @@ public class CalculationService {
         this.percentageRepository = percentageRepository;
     }
 
-    public Calculation calculate(BigDecimal num1, BigDecimal num2) {
-        BigDecimal percentage;
+    public Mono<Calculation> calculate(BigDecimal num1, BigDecimal num2) {
 
-        try {
-            percentage = percentageRepository.getCurrentPercentage();
-        } catch (Exception e) {
-            throw new TraceabilityException("Error retrieving percentage from external service.", e);
-        }
-
-        if (percentage == null) {
-            throw new TraceabilityException("No cached percentage available and external service failed.");
-        }
-
-        Calculation calculation = new Calculation(num1, num2, percentage);
-        calculation.calculateResult();
-        return calculation;
+        return percentageRepository.getCurrentPercentage()
+                .switchIfEmpty(Mono.error(new TraceabilityException("No cached percentage available and external service failed.")))
+                .map(percentage -> {
+                    Calculation calculation = new Calculation(num1, num2, percentage);
+                    calculation.calculateResult();
+                    return calculation;
+                })
+                .onErrorResume(e -> Mono.error(new TraceabilityException("Error retrieving percentage from external service.", e)));
     }
 }
