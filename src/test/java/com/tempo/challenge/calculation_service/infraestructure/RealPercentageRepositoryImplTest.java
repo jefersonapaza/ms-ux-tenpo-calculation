@@ -10,7 +10,7 @@ import reactor.test.StepVerifier;
 import java.math.BigDecimal;
 
 @SpringBootTest
-class RealServiceIntegrationTest {
+class RealPercentageRepositoryImplTest {
 
     @Autowired
     private PercentageRepository percentageRepository;
