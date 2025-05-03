@@ -1,13 +1,15 @@
 package com.tempo.challenge.calculation_service.infraestructure.config;
 
-public class PercentageResponse {
-    private double percentage;
+import java.math.BigDecimal;
 
-    public double getPercentage() {
+public class PercentageResponse {
+    private BigDecimal percentage;
+
+    public BigDecimal getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(double percentage) {
+    public void setPercentage(BigDecimal percentage) {
         this.percentage = percentage;
     }
 }
