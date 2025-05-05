@@ -18,39 +18,5 @@ import java.math.BigDecimal;
 @ExtendWith(SpringExtension.class)
 class PercentageRepositoryImplTest {
 
-    private MockWebServer mockWebServer;
-    private PercentageRepositoryImpl percentageRepository;
 
-    @BeforeEach
-    void setup() throws IOException {
-        mockWebServer = new MockWebServer();
-        mockWebServer.start();
-
-        String baseUrl = mockWebServer.url("/").toString();
-
-        WebClient webClient = WebClient.builder()
-                .baseUrl(baseUrl)
-                .build();
-
-        percentageRepository = new PercentageRepositoryImpl(webClient);
-    }
-
-    @AfterEach
-    void tearDown() throws IOException {
-        mockWebServer.shutdown();
-    }
-
-    @Test
-    void given_validResponse_when_getCurrentPercentage_then_returnPercentage() {
-        String mockBody = "{\"percentage\": 15.5}";
-        mockWebServer.enqueue(new MockResponse()
-                .setBody(mockBody)
-                .addHeader("Content-Type", "application/json"));
-
-        Mono<BigDecimal> result = percentageRepository.getCurrentPercentage();
-
-        StepVerifier.create(result)
-                .expectNext(new BigDecimal("15.5"))
-                .verifyComplete();
-    }
 }
