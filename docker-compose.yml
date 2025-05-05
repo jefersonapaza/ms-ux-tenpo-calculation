@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  redis-server:
+    image: redis:7.2
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+  percentage-service:
+    build:
+      context: ./percentage-microservice
+    container_name: percentage-service
+    ports:
+      - "5001:5000"
+    networks:
+      - app-network
+
+  calculation-service:
+    build: .
+    container_name: calculation-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis-server
+      - percentage-service
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
